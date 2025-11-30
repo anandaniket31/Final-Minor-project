@@ -1,119 +1,127 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Sprout, CloudSun, Brain, Leaf } from "lucide-react";
+import { Sprout, CloudSun, Brain, Leaf, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Home() {
+  const { t } = useLanguage();
+
   const features = [
     {
-      title: "Crop Recommendation",
+      title: t("home.features.cropRecommendation"),
       path: "/crop-recommendation",
-      icon: <Brain className="w-8 h-8 text-green-100" />,
-      img: "https://images.unsplash.com/photo-1598965402089-897ce52e89b2?auto=format&fit=crop&w=1600&q=80", // Crop AI
-      gradient: "from-green-600/70 to-emerald-700/70",
+      icon: <Brain className="w-10 h-10 text-white" />,
+      img: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=800&q=80", // Farm field
+      description: t("home.features.cropRecommendationDesc"),
     },
     {
-      title: "Weather Insights",
+      title: t("home.features.weatherInsights"),
       path: "/weather",
-      icon: <CloudSun className="w-8 h-8 text-yellow-100" />,
-      img: "https://images.unsplash.com/photo-1527489377706-5bf97e608852?auto=format&fit=crop&w=1600&q=80", // Cloudy sky over farm
-      gradient: "from-sky-500/70 to-blue-700/70",
+      icon: <CloudSun className="w-10 h-10 text-white" />,
+      img: "https://images.unsplash.com/photo-1592210454359-9043f067919b?auto=format&fit=crop&w=800&q=80", // Green field with sky
+      description: t("home.features.weatherInsightsDesc"),
     },
     {
-      title: "Farming Advisory",
+      title: t("home.features.pestDetect"),
       path: "/advisory",
-      icon: <Leaf className="w-8 h-8 text-green-100" />,
-      img: "https://images.unsplash.com/photo-1581093448798-5dc94a9a3b58?auto=format&fit=crop&w=1600&q=80", // Farmer hand inspecting crops
-      gradient: "from-yellow-500/70 to-amber-700/70",
+      icon: <Leaf className="w-10 h-10 text-white" />,
+      img: "https://images.unsplash.com/photo-1535379453347-1ffd615e2e08?q=80&w=1000&auto=format&fit=crop", // Farmer with tablet
+      description: t("home.features.pestDetectDesc"),
     },
     {
-      title: "Crop Details",
+      title: t("home.features.cropDetails"),
       path: "/crop-details",
-      icon: <Sprout className="w-8 h-8 text-green-100" />,
-      img: "https://images.unsplash.com/photo-1579710759509-4af7320c5d1b?auto=format&fit=crop&w=1600&q=80", // Close-up of green leaves
-      gradient: "from-lime-500/70 to-green-700/70",
+      icon: <Sprout className="w-10 h-10 text-white" />,
+      img: "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=800&q=80", // Close up leaf
+      description: t("home.features.cropDetailsDesc"),
     },
   ];
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 flex flex-col items-center justify-center text-center px-6 py-16 overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute top-20 left-10 w-36 h-36 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-pulse"></div>
-      <div className="absolute bottom-20 right-10 w-40 h-40 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-pulse"></div>
-
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Hero Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        className="z-10 max-w-3xl"
-      >
-        <h1 className="text-5xl font-extrabold text-green-800 drop-shadow-md mb-4 flex justify-center items-center gap-2">
-          <Sprout className="w-10 h-10 text-green-600" /> SmartFarm 🌾
-        </h1>
-        <p className="text-gray-700 text-lg mb-12">
-          AI-powered <span className="font-semibold text-green-700">Crop & Weather Intelligence</span>  
-          for smarter, data-driven agriculture.
-        </p>
-      </motion.div>
+      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1740&auto=format&fit=crop"
+            alt="Farm Hero"
+            className="w-full h-full object-cover"
+            onError={(e) => { e.target.src = "https://placehold.co/1920x1080?text=Smart+Farming"; }}
+          />
+          <div className="absolute inset-0 bg-black/50" />
+        </div>
 
-      {/* Function Image Buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 60 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2 }}
-        className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 z-10"
-      >
-        {features.map((feature, i) => (
-          <Link to={feature.path} key={i}>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
-              className="relative group rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
-            >
-              <img
-                src={feature.img}
-                alt={feature.title}
-                className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-              <div
-                className={`absolute inset-0 bg-gradient-to-tr ${feature.gradient} flex flex-col items-center justify-center text-white backdrop-blur-[2px]`}
-              >
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4 }}
-                  className="flex flex-col items-center gap-3"
-                >
-                  {feature.icon}
-                  <h3 className="text-xl font-bold">{feature.title}</h3>
-                  <p className="text-sm text-white/80 opacity-0 group-hover:opacity-100 transition-all">
-                    Click to explore
-                  </p>
-                </motion.div>
-              </div>
-            </motion.div>
-          </Link>
-        ))}
-      </motion.div>
-
-      {/* CTA Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.4 }}
-        className="mt-20 text-center z-10"
-      >
-        <p className="text-gray-700 text-lg mb-4">
-          🌱 Begin your Smart Farming journey with AI insights.
-        </p>
-        <Link
-          to="/crop-recommendation"
-          className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all"
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto"
         >
-          Get Started
-        </Link>
-      </motion.div>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 font-heading tracking-tight">
+            {t("home.heroTitle")} <span className="text-accent">{t("home.heroTitleAccent")}</span>
+          </h1>
+          <p className="text-xl md:text-2xl mb-10 text-gray-200 font-light">
+            {t("home.heroSubtitle")}
+          </p>
+          <Link
+            to="/crop-recommendation"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-primary font-bold text-lg rounded-full hover:bg-yellow-400 transition-all transform hover:scale-105 shadow-lg"
+          >
+            {t("home.getStarted")} <ArrowRight size={20} />
+          </Link>
+        </motion.div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 px-6 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4 font-heading">{t("home.keyFeatures")}</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            {t("home.keyFeaturesSubtitle")}
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((feature, i) => (
+            <Link to={feature.path} key={i} className="group">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col"
+              >
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={feature.img}
+                    alt={feature.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    onError={(e) => { e.target.src = `https://placehold.co/600x400?text=${encodeURIComponent(feature.title)}`; }}
+                  />
+                  <div className="absolute inset-0 bg-primary/30 group-hover:bg-primary/10 transition-colors" />
+                  <div className="absolute bottom-4 left-4 bg-primary/90 p-3 rounded-xl backdrop-blur-sm">
+                    {feature.icon}
+                  </div>
+                </div>
+                <div className="p-6 flex-grow flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-xl font-bold text-primary mb-2 group-hover:text-secondary transition-colors">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                  <div className="mt-4 flex items-center text-secondary font-semibold text-sm group-hover:translate-x-1 transition-transform">
+                    {t("home.learnMore")} <ArrowRight size={16} className="ml-1" />
+                  </div>
+                </div>
+              </motion.div>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,42 +1,35 @@
 import express from "express";
-import { spawn } from "child_process";
-import path from "path";
-import { fileURLToPath } from "url";
 import Prediction from "../models/Prediction.js";
 
 const router = express.Router();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
+
+import axios from "axios";
 
 router.post("/", async (req, res) => {
-  const pythonScriptPath = path.join(__dirname, "..", "..", "ml-model", "predict.py");
-  const python = spawn("python", [pythonScriptPath]);
+  try {
+    // Call the running ML Service
+    const mlResponse = await axios.post("http://localhost:5001/predict", req.body);
 
-  let output = "", error = "";
+    if (mlResponse.data.success) {
+      const predictedCrop = mlResponse.data.recommended_crop;
 
-  python.stdout.on("data", (data) => (output += data.toString()));
-  python.stderr.on("data", (data) => (error += data.toString()));
+      // 💾 Save to MongoDB (Optional)
+      try {
+        const saved = new Prediction({ ...req.body, predicted_crop: predictedCrop });
+        await saved.save();
+      } catch (dbError) {
+        console.warn("Database save failed (non-fatal):", dbError.message);
+      }
 
-  python.on("close", async (code) => {
-    if (error) console.error("Python error:", error);
-
-    try {
-      const result = JSON.parse(output);
-      if (result.error) return res.status(500).json(result);
-
-      // 💾 Save to MongoDB
-      const saved = new Prediction({ ...req.body, predicted_crop: result.predicted_crop });
-      await saved.save();
-
-      res.json(result);
-    } catch (e) {
-      console.error("JSON parse error:", output);
-      res.status(500).json({ error: "Invalid JSON from Python script" });
+      res.json({ predicted_crop: predictedCrop });
+    } else {
+      res.status(400).json({ error: mlResponse.data.error || "Prediction failed" });
     }
-  });
-
-  python.stdin.write(JSON.stringify(req.body));
-  python.stdin.end();
+  } catch (error) {
+    console.error("ML Service error:", error.message);
+    res.status(500).json({ error: "Failed to communicate with ML service" });
+  }
 });
 
 export default router;

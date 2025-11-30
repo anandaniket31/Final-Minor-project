@@ -11,23 +11,27 @@ import Weather from "./pages/Weather";
 import Advisory from "./pages/Advisory";
 import CropDetails from "./pages/CropDetails";
 
+import { LanguageProvider } from "./context/LanguageContext";
+
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen flex flex-col bg-green-50">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/crop-recommendation" element={<CropRecommendation />} />
-            <Route path="/weather" element={<Weather />} />
-            <Route path="/advisory" element={<Advisory />} />
-            <Route path="/crop-details" element={<CropDetails />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <div className="min-h-screen flex flex-col bg-green-50">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/crop-recommendation" element={<CropRecommendation />} />
+              <Route path="/weather" element={<Weather />} />
+              <Route path="/advisory" element={<Advisory />} />
+              <Route path="/crop-details" element={<CropDetails />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </LanguageProvider>
   );
 }
 
